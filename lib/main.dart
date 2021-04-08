@@ -81,8 +81,9 @@ class SelectedDateRange extends State<DateRanges> {
     setState(() {
       _startDate =
           DateFormat('dd, MMMM yyyy').format(args.value.startDate).toString();
-      _endDate =
-          DateFormat('dd, MMMM yyyy').format(args.value.endDate).toString();
+      _endDate = DateFormat('dd, MMMM yyyy')
+          .format(args.value.endDate ?? args.value.startDate)
+          .toString();
     });
   }
 }
