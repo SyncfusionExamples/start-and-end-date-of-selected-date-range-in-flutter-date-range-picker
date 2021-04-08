@@ -8,24 +8,22 @@ class DateRanges extends StatefulWidget {
   @override
   SelectedDateRange createState() => SelectedDateRange();
 }
+
 List<String> views = <String>['Month', 'Year', 'Decade', 'Century'];
+
 class SelectedDateRange extends State<DateRanges> {
-  String _startDate, _endDate;
-  DateRangePickerController _controller;
-  DateTime _start, _end,_today;
+  late String _startDate, _endDate;
+  final DateRangePickerController _controller = DateRangePickerController();
 
   @override
   void initState() {
-    _controller = DateRangePickerController();
-
-    _startDate = DateFormat('dd, MMMM yyyy').format(DateTime.now()).toString();
+    final DateTime today = DateTime.now();
+    _startDate = DateFormat('dd, MMMM yyyy').format(today).toString();
     _endDate = DateFormat('dd, MMMM yyyy')
-        .format(DateTime.now().add(Duration(days: 3)))
+        .format(today.add(Duration(days: 3)))
         .toString();
-    _today=DateTime.now();
-    _start = _today;
-    _end = _today.add(Duration(days: 3));
-    _controller.selectedRange = PickerDateRange(_start, _end);
+    _controller.selectedRange =
+        PickerDateRange(today, today.add(Duration(days: 3)));
     super.initState();
   }
 
@@ -33,31 +31,35 @@ class SelectedDateRange extends State<DateRanges> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(leading: PopupMenuButton<String>(
-          icon: Icon(Icons.calendar_today),
-          itemBuilder: (BuildContext context) => views.map((String choice) {
-            return PopupMenuItem<String>(
-              value: choice,
-              child: Text(choice),
-            );
-          }).toList(),
-          onSelected: (String value) {
-            if (value == 'Month') {
-              _controller.view = DateRangePickerView.month;
-            } else if (value == 'Year') {
-              _controller.view = DateRangePickerView.year;
-            } else if (value == 'Decade') {
-              _controller.view = DateRangePickerView.decade;
-            } else if (value == 'Century') {
-              _controller.view = DateRangePickerView.century;
-            }
-          },
-        ),),
+        appBar: AppBar(
+          leading: PopupMenuButton<String>(
+            icon: Icon(Icons.calendar_today),
+            itemBuilder: (BuildContext context) => views.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList(),
+            onSelected: (String value) {
+              if (value == 'Month') {
+                _controller.view = DateRangePickerView.month;
+              } else if (value == 'Year') {
+                _controller.view = DateRangePickerView.year;
+              } else if (value == 'Decade') {
+                _controller.view = DateRangePickerView.decade;
+              } else if (value == 'Century') {
+                _controller.view = DateRangePickerView.century;
+              }
+            },
+          ),
+        ),
         body: SafeArea(
           child: Column(
             children: <Widget>[
-              Container(margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  height: 50, child: Text('StartRangeDate:' '$_startDate')),
+              Container(
+                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  height: 50,
+                  child: Text('StartRangeDate:' '$_startDate')),
               Container(height: 50, child: Text('EndRangeDate:' '$_endDate')),
               Card(
                 margin: const EdgeInsets.fromLTRB(50, 40, 50, 100),
@@ -79,8 +81,9 @@ class SelectedDateRange extends State<DateRanges> {
     setState(() {
       _startDate =
           DateFormat('dd, MMMM yyyy').format(args.value.startDate).toString();
-      _endDate =
-          DateFormat('dd, MMMM yyyy').format(args.value.endDate).toString();
+      _endDate = DateFormat('dd, MMMM yyyy')
+          .format(args.value.endDate ?? args.value.startDate)
+          .toString();
     });
   }
 }
