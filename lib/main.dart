@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-void main() => runApp(DateRanges());
+void main() => runApp(const DateRanges());
 
 class DateRanges extends StatefulWidget {
+  const DateRanges({super.key});
+
   @override
   SelectedDateRange createState() => SelectedDateRange();
 }
@@ -20,20 +22,21 @@ class SelectedDateRange extends State<DateRanges> {
     final DateTime today = DateTime.now();
     _startDate = DateFormat('dd, MMMM yyyy').format(today).toString();
     _endDate = DateFormat('dd, MMMM yyyy')
-        .format(today.add(Duration(days: 3)))
+        .format(today.add(const Duration(days: 3)))
         .toString();
     _controller.selectedRange =
-        PickerDateRange(today, today.add(Duration(days: 3)));
+        PickerDateRange(today, today.add(const Duration(days: 3)));
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           leading: PopupMenuButton<String>(
-            icon: Icon(Icons.calendar_today),
+            icon: const Icon(Icons.calendar_today),
             itemBuilder: (BuildContext context) => views.map((String choice) {
               return PopupMenuItem<String>(
                 value: choice,
